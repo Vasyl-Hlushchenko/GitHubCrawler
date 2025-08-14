@@ -78,12 +78,11 @@ def fetch_html(url: str, proxies: dict[str, str]) -> str:
     response = requests.get(
         url, headers=HEADERS, proxies=proxies, timeout=10, verify=True
     )
-    response.raise_for_status()
 
     return response.text
 
 
-def parse_search_results(html: str, search_type: str) -> list[dict[str, str]]:
+def parse_search_results(html: str) -> list[dict[str, str]]:
     """
     Parses GitHub search results from the first page of HTML.
     Supports processing of search types: Repositories, Issues, Wikis.
@@ -154,7 +153,7 @@ def github_crawler(
     proxies = fetch_free_proxies() if not proxies else proxies
     proxy = get_random_proxy(proxies)
     html = fetch_html(url, proxy)
-    results = parse_search_results(html, search_type)
+    results = parse_search_results(html)
     if search_type != "Repositories":
         return [{"url": f"{GITHUB_BASE_URL}{result}"} for result in results]
 
